@@ -72,3 +72,40 @@ export const requireRole = (...allowedRoles) => {
     next();
   };
 };
+
+/**
+ * Middleware: Optional JWT
+ * Attaches user to req.user if valid token is provided, otherwise proceeds without error
+ */
+export const optionalJWT = async (req, res, next) => {
+  try {
+    let token = null;
+    const authHeader = req.headers.authorization || req.headers.Authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    } else if (req.cookies && req.cookies.accessToken) {
+      token = req.cookies.accessToken;
+    }
+
+    if (!token) {
+      req.user = null;
+      return next();
+    }
+
+    try {
+      const decoded = jwt.verify(token, env.JWT_ACCESS_SECRET);
+      const user = await User.findById(decoded._id);
+      if (user && user.accountStatus === 'active') {
+        req.user = user;
+      } else {
+        req.user = null;
+      }
+    } catch {
+      req.user = null;
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};

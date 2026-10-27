@@ -6,14 +6,16 @@ import {
   updateShow,
   deleteShow
 } from '../controllers/show.controller.js';
-import { verifyJWT, requireRole } from '../middlewares/auth.middleware.js';
+import { verifyJWT, requireRole, optionalJWT } from '../middlewares/auth.middleware.js';
 import { validateCreateShow } from '../validators/cinema.validator.js';
+import { getShowSeats } from '../controllers/booking.controller.js';
 
 const router = Router();
 
 // Public schedule endpoints
 router.get('/', getShows);
 router.get('/:id', getShowById);
+router.get('/:id/seats', optionalJWT, getShowSeats);
 
 // Protected Administrator endpoints (with schedule conflict validation)
 router.post('/', verifyJWT, requireRole('admin'), validateCreateShow, createShow);

@@ -207,3 +207,163 @@ h1, h2, h3, h4, h5, h6, .cinema-heading {
 .status-pill-offline::after {
   background-color: #ef4444;
 }
+
+/* -------------------------------------------------------------
+ * Phase 5: Cinema Seating Layout & Real-Time Availability
+ * ----------------------------------------------------------- */
+.cinema-screen-curve {
+  width: 75%;
+  max-width: 600px;
+  height: 18px;
+  margin: 10px auto 36px auto;
+  border-top: 5px solid #38bdf8;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 -8px 25px -4px rgba(56, 189, 248, 0.45);
+  position: relative;
+  text-align: center;
+}
+
+.cinema-screen-glow {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: #38bdf8;
+  text-transform: uppercase;
+}
+
+.seat-grid-container {
+  overflow-x: auto;
+  padding: 1.5rem 0.5rem;
+  text-align: center;
+  user-select: none;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.seat-row-label {
+  width: 32px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--imovies-text-muted);
+  text-align: center;
+}
+
+.seat-btn {
+  width: 34px;
+  height: 32px;
+  border-radius: 6px 6px 3px 3px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  border: 1px solid transparent;
+  padding: 0;
+  outline: none;
+  position: relative;
+}
+
+.seat-btn:focus-visible {
+  outline: 2px solid var(--imovies-primary);
+  outline-offset: 2px;
+}
+
+/* Category states */
+.seat-btn.seat-standard {
+  background: #1e293b;
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+.seat-btn.seat-standard:hover:not(:disabled) {
+  background: #334155;
+  border-color: #64748b;
+  color: #fff;
+  transform: scale(1.12);
+}
+
+.seat-btn.seat-premium {
+  background: rgba(6, 182, 212, 0.15);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: #22d3ee;
+}
+
+.seat-btn.seat-premium:hover:not(:disabled) {
+  background: rgba(6, 182, 212, 0.35);
+  border-color: #06b6d4;
+  color: #fff;
+  transform: scale(1.12);
+}
+
+.seat-btn.seat-vip {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+
+.seat-btn.seat-vip:hover:not(:disabled) {
+  background: rgba(245, 158, 11, 0.35);
+  border-color: #f59e0b;
+  color: #fff;
+  transform: scale(1.12);
+}
+
+/* Selected state */
+.seat-btn.seat-selected {
+  background: #f59e0b !important;
+  border-color: #fef08a !important;
+  color: #07090e !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.85);
+  transform: scale(1.15);
+  font-weight: 800;
+}
+
+/* Locked by current session */
+.seat-btn.seat-locked-by-me {
+  background: #10b981 !important;
+  border-color: #6ee7b7 !important;
+  color: #022c22 !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+}
+
+/* Locked by concurrent user */
+.seat-btn.seat-locked {
+  background: repeating-linear-gradient(45deg, #7c2d12, #7c2d12 4px, #451a03 4px, #451a03 8px) !important;
+  border-color: #ea580c !important;
+  color: #fdba74 !important;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Booked permanently */
+.seat-btn.seat-booked {
+  background: #0f141f !important;
+  border-color: #1e293b !important;
+  color: #475569 !important;
+  cursor: not-allowed;
+  opacity: 0.35;
+  text-decoration: line-through;
+}
+
+/* Accessible seat badge */
+.seat-accessible-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 5px;
+  height: 5px;
+  background-color: #38bdf8;
+  border-radius: 50%;
+}

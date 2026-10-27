@@ -14,6 +14,7 @@ import LoginPage from './pages/auth/LoginPage.jsx';
 import RegisterPage from './pages/auth/RegisterPage.jsx';
 import ProfilePage from './pages/profile/ProfilePage.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
+import SeatSelectionPage from './pages/booking/SeatSelectionPage.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
 import { socketService } from './services/socket.js';
 
@@ -53,6 +54,7 @@ export function App() {
           <Route path="/movies/:id" element={<MovieDetailsPage />} />
           <Route path="/theatres" element={<TheatresPage />} />
           <Route path="/theatres/:id" element={<TheatreDetailsPage />} />
+          <Route path="/shows/:showId/seats" element={<SeatSelectionPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
