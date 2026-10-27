@@ -6,6 +6,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/common/Header.jsx';
 import Footer from './components/common/Footer.jsx';
 import HomePage from './pages/HomePage.jsx';
+import MovieDiscoveryPage from './pages/movies/MovieDiscoveryPage.jsx';
+import MovieDetailsPage from './pages/movies/MovieDetailsPage.jsx';
+import TheatresPage from './pages/theatres/TheatresPage.jsx';
+import TheatreDetailsPage from './pages/theatres/TheatreDetailsPage.jsx';
 import LoginPage from './pages/auth/LoginPage.jsx';
 import RegisterPage from './pages/auth/RegisterPage.jsx';
 import ProfilePage from './pages/profile/ProfilePage.jsx';
@@ -43,8 +47,12 @@ export function App() {
 
       <main className="flex-grow-1">
         <Routes>
-          {/* Public Routes */}
+          {/* Public Customer Routes */}
           <Route path="/" element={<HomePage onStatusChange={setBackendConnected} />} />
+          <Route path="/movies" element={<MovieDiscoveryPage />} />
+          <Route path="/movies/:id" element={<MovieDetailsPage />} />
+          <Route path="/theatres" element={<TheatresPage />} />
+          <Route path="/theatres/:id" element={<TheatreDetailsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
@@ -68,13 +76,13 @@ export function App() {
             }
           />
 
-          {/* Catch-all 404 Route */}
+          {/* Fallback 404 Route */}
           <Route
             path="*"
             element={
               <div className="container py-5 text-center">
                 <h2 className="cinema-heading text-warning mb-3">404 – Page Not Found</h2>
-                <p className="text-secondary mb-4">The movie or screen page you requested does not exist.</p>
+                <p className="text-secondary mb-4">The cinema page or screening you requested does not exist.</p>
                 <a href="/" className="btn btn-cinema-primary">Return to Homepage</a>
               </div>
             }
