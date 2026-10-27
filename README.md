@@ -185,6 +185,51 @@ npm test
 
 ---
 
+## ☁️ Cloud Deployment Guide (Render & Vercel)
+
+### Step 1: Deploy Backend on Render
+1. Go to **[Render Dashboard](https://dashboard.render.com/)** and select **New +** > **Web Service**.
+2. Connect your GitHub repository: `https://github.com/kushal-4656/IMovies`.
+3. Configure the service settings:
+   - **Name:** `imovies-backend`
+   - **Root Directory:** `backend`
+   - **Environment:** `Node`
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+4. In the **Environment Variables** section, add:
+   ```env
+   NODE_ENV=production
+   PORT=10000
+   MONGODB_URI=<Your MongoDB Atlas connection string>
+   CLIENT_URL=https://<your-vercel-domain>.vercel.app
+   JWT_ACCESS_SECRET=your_super_secret_jwt_access_key_min_32_chars
+   JWT_REFRESH_SECRET=your_super_secret_jwt_refresh_key_min_32_chars
+   SEAT_LOCK_EXPIRY_MINUTES=10
+   RAZORPAY_KEY_ID=rzp_test_imovies_mock_key
+   RAZORPAY_KEY_SECRET=rzp_test_imovies_mock_secret
+   ```
+5. Click **Create Web Service**. Note your Render backend URL (e.g., `https://imovies-backend.onrender.com`).
+
+---
+
+### Step 2: Deploy Frontend on Vercel
+1. Go to **[Vercel Dashboard](https://vercel.com/dashboard)** and click **Add New...** > **Project**.
+2. Import your GitHub repository: `https://github.com/kushal-4656/IMovies`.
+3. Configure project settings:
+   - **Framework Preset:** `Vite`
+   - **Root Directory:** Click Edit and select `frontend`.
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+4. In the **Environment Variables** section, add:
+   ```env
+   VITE_API_BASE_URL=https://<your-render-backend-url>.onrender.com/api/v1
+   VITE_SOCKET_URL=https://<your-render-backend-url>.onrender.com
+   ```
+5. Click **Deploy**. Vercel will build and assign your production domain (e.g. `https://imovies-app.vercel.app`).
+6. *Important:* Update `CLIENT_URL` in your Render backend environment variables with your final Vercel domain URL!
+
+---
+
 ## 🐳 Docker Deployment
 
 To launch the entire platform in isolated production containers:
@@ -200,7 +245,7 @@ The application will be live at:
 
 ## 🛡️ Security & Reliability Implementations
 1. **SRV DNS Workaround for Windows:** Automated fallback to Google Public DNS (`8.8.8.8`) ensures reliable resolution of MongoDB Atlas SRV connection strings on all Windows environments.
-2. **Helmet Security Headers & CORS Protection:** Restricts cross-origin requests and prevents clickjacking and MIME-type sniffing.
+2. **Helmet Security Headers & CORS Protection:** Restricts cross-origin requests and dynamically permits custom `CLIENT_URL` and `*.vercel.app` domains.
 3. **Multi-Tier Rate Limiting:** Separate rate limiters for general API calls (300/15min), authentication endpoints (30/15min), and booking/payment transactions (50/5min) to prevent brute-force attacks and reservation spam.
 4. **Input Sanitization & Schema Validation:** Enforces strict boundary checks on all dates, ticket quantities (1 to 8 max per transaction), and show durations.
 
