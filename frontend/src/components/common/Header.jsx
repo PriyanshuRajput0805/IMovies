@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FaFilm, FaMapMarkerAlt, FaSearch, FaUserCircle, FaBars, FaTimes } from 'react-icons/fa';
-import { logout } from '../../features/auth/authSlice.js';
+import { logoutUser } from '../../features/auth/authSlice.js';
 
 const CITIES = ['Mumbai', 'Delhi-NCR', 'Bengaluru', 'Hyderabad', 'Chennai', 'Kolkata', 'Pune'];
 
@@ -21,8 +21,8 @@ export const Header = ({ backendConnected, socketConnected }) => {
     }
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    await dispatch(logoutUser());
     navigate('/');
   };
 

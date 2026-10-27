@@ -1,6 +1,14 @@
 import mongoose from 'mongoose';
+import dns from 'dns';
 import { env } from './env.js';
 import { logger } from '../utils/logger.js';
+
+// Configure reliable DNS servers for MongoDB Atlas SRV record resolution
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']);
+} catch (dnsErr) {
+  logger.warn(`Could not set custom DNS servers: ${dnsErr.message}`);
+}
 
 let mongodInstance = null;
 let currentDbUri = null;
@@ -19,7 +27,7 @@ const sanitizeMongoUri = (rawUri) => {
 };
 
 /**
- * Initialize in-memory MongoDB server (useful for testing or offline development)
+ * Initialize in-memory MongoDB server (fallback for testing or offline dev)
  */
 export const startMemoryServer = async () => {
   if (mongodInstance) {
@@ -40,39 +48,23 @@ export const startMemoryServer = async () => {
  * Connect to MongoDB with automatic fallback in development/test if Atlas or local is unavailable
  */
 export const connectDB = async () => {
-  // If explicitly requested or running in test mode with known non-resolving URI
-  const isTestOrLocalOnly = process.env.NODE_ENV === 'test' && (!process.env.MONGODB_URI || process.env.MONGODB_URI.includes('chat-db.8ywxpr8'));
-  
-  if (isTestOrLocalOnly) {
-    try {
-      const memUri = await startMemoryServer();
-      currentDbUri = memUri;
-      const conn = await mongoose.connect(memUri);
-      dbConnectionMode = 'In-Memory MongoMemoryServer';
-      logger.success(`Connected to In-Memory MongoDB for testing: ${memUri}`);
-      return conn;
-    } catch (memErr) {
-      logger.error(`Failed to start in-memory database: ${memErr.message}`);
-      throw memErr;
-    }
-  }
-
   const targetUri = sanitizeMongoUri(env.MONGODB_URI);
   currentDbUri = targetUri;
 
   const mongooseOptions = {
-    serverSelectionTimeoutMS: 4000,
-    connectTimeoutMS: 4000,
+    serverSelectionTimeoutMS: 6000,
+    connectTimeoutMS: 6000,
   };
 
   try {
-    logger.info(`Attempting to connect to MongoDB... (${targetUri.replace(/:([^:@]+)@/, ':****@')})`);
+    const maskedUri = targetUri.replace(/:([^:@]+)@/, ':****@');
+    logger.info(`Attempting to connect to MongoDB... (${maskedUri})`);
     const conn = await mongoose.connect(targetUri, mongooseOptions);
     dbConnectionMode = targetUri.includes('mongodb.net') ? 'MongoDB Atlas' : 'Local MongoDB';
     logger.success(`MongoDB Connected successfully: ${conn.connection.host} [${dbConnectionMode}]`);
     return conn;
   } catch (primaryErr) {
-    logger.warn(`Primary MongoDB connection failed (${primaryErr.message}). Falling back to In-Memory MongoDB for local development.`);
+    logger.warn(`Primary MongoDB connection failed (${primaryErr.message}). Falling back to In-Memory MongoDB.`);
 
     try {
       const memUri = await startMemoryServer();

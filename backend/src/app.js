@@ -8,6 +8,7 @@ import { env } from './config/env.js';
 import { apiLimiter } from './middlewares/rateLimiter.middleware.js';
 import { notFoundHandler, errorHandler } from './middlewares/error.middleware.js';
 import healthRoutes from './routes/health.routes.js';
+import authRoutes from './routes/auth.routes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -55,6 +56,7 @@ app.get('/', (req, res) => {
 
 // API v1 Routes
 app.use('/api/v1/health', healthRoutes);
+app.use('/api/v1/auth', authRoutes);
 
 // Catch 404 and forward to error handler
 app.use(notFoundHandler);

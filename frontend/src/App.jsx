@@ -6,6 +6,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/common/Header.jsx';
 import Footer from './components/common/Footer.jsx';
 import HomePage from './pages/HomePage.jsx';
+import LoginPage from './pages/auth/LoginPage.jsx';
+import RegisterPage from './pages/auth/RegisterPage.jsx';
+import ProfilePage from './pages/profile/ProfilePage.jsx';
+import AdminDashboardPlaceholder from './pages/admin/AdminDashboardPlaceholder.jsx';
+import ProtectedRoute from './components/common/ProtectedRoute.jsx';
 import { socketService } from './services/socket.js';
 
 export function App() {
@@ -38,13 +43,38 @@ export function App() {
 
       <main className="flex-grow-1">
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<HomePage onStatusChange={setBackendConnected} />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+
+          {/* Protected Customer Routes */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Protected Administrator Routes */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <AdminDashboardPlaceholder />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Catch-all 404 Route */}
           <Route
             path="*"
             element={
               <div className="container py-5 text-center">
-                <h2 className="cinema-heading text-warning mb-3">Page Under Construction</h2>
-                <p className="text-secondary mb-4">This route will be unlocked in upcoming implementation phases.</p>
+                <h2 className="cinema-heading text-warning mb-3">404 – Page Not Found</h2>
+                <p className="text-secondary mb-4">The movie or screen page you requested does not exist.</p>
                 <a href="/" className="btn btn-cinema-primary">Return to Homepage</a>
               </div>
             }
