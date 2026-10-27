@@ -15,6 +15,9 @@ import RegisterPage from './pages/auth/RegisterPage.jsx';
 import ProfilePage from './pages/profile/ProfilePage.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import SeatSelectionPage from './pages/booking/SeatSelectionPage.jsx';
+import CheckoutPage from './pages/booking/CheckoutPage.jsx';
+import BookingConfirmationPage from './pages/booking/BookingConfirmationPage.jsx';
+import BookingHistoryPage from './pages/profile/BookingHistoryPage.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
 import { socketService } from './services/socket.js';
 
