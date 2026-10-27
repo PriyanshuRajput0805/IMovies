@@ -9,7 +9,7 @@ import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/auth/LoginPage.jsx';
 import RegisterPage from './pages/auth/RegisterPage.jsx';
 import ProfilePage from './pages/profile/ProfilePage.jsx';
-import AdminDashboardPlaceholder from './pages/admin/AdminDashboardPlaceholder.jsx';
+import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
 import { socketService } from './services/socket.js';
 
@@ -63,7 +63,7 @@ export function App() {
             path="/admin"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboardPlaceholder />
+                <AdminDashboard />
               </ProtectedRoute>
             }
           />

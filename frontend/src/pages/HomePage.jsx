@@ -7,8 +7,8 @@ export const HomePage = ({ onStatusChange }) => {
   const phases = [
     { number: '01', title: 'Foundation', status: 'Completed', active: true, desc: 'Project scaffolding, Mongoose connection, Socket.IO server, rate limiting, health checks, environment configs.' },
     { number: '02', title: 'Authentication', status: 'Completed', active: true, desc: 'User registration, login, JWT token auth, bcryptjs password hashing, role-based access control (user/admin).' },
-    { number: '03', title: 'Cinema Data', status: 'Next Phase', active: false, desc: 'Movies, theatres, screens, seat layouts, show scheduling, conflict detection, and admin CRUD interfaces.' },
-    { number: '04', title: 'Customer Experience', status: 'Upcoming', active: false, desc: 'Cinematic homepage, movie search, multi-filter discovery, movie details, trailer modals, showtime selectors.' },
+    { number: '03', title: 'Cinema Data', status: 'Completed', active: true, desc: 'Movies, theatres, screens, seat layouts, show scheduling, conflict detection, and admin CRUD interfaces.' },
+    { number: '04', title: 'Customer Experience', status: 'Next Phase', active: false, desc: 'Cinematic homepage, movie search, multi-filter discovery, movie details, trailer modals, showtime selectors.' },
     { number: '05', title: 'Seat Booking', status: 'Upcoming', active: false, desc: 'Interactive SVG/Canvas seat maps, 10-minute server seat locking, Socket.IO live broadcasts, zero double-booking.' },
     { number: '06', title: 'Payments', status: 'Upcoming', active: false, desc: 'Razorpay payment orders, server-side HMAC signature verification, webhook processing, mock-payment fallback.' },
     { number: '07', title: 'Dashboards', status: 'Upcoming', active: false, desc: 'User booking history, digital QR tickets, cancellation & refund workflows, admin operational metrics.' },
@@ -68,7 +68,7 @@ export const HomePage = ({ onStatusChange }) => {
             <p className="text-secondary small m-0">Modular 9-phase production-ready engineering lifecycle.</p>
           </div>
           <span className="badge badge-emerald px-3 py-2 rounded-pill">
-            Phases 1 & 2: Complete
+            Phases 1-3: Complete
           </span>
         </div>
 

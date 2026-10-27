@@ -9,6 +9,10 @@ import { apiLimiter } from './middlewares/rateLimiter.middleware.js';
 import { notFoundHandler, errorHandler } from './middlewares/error.middleware.js';
 import healthRoutes from './routes/health.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import movieRoutes from './routes/movie.routes.js';
+import theatreRoutes from './routes/theatre.routes.js';
+import screenRoutes from './routes/screen.routes.js';
+import showRoutes from './routes/show.routes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -57,6 +61,10 @@ app.get('/', (req, res) => {
 // API v1 Routes
 app.use('/api/v1/health', healthRoutes);
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/movies', movieRoutes);
+app.use('/api/v1/theatres', theatreRoutes);
+app.use('/api/v1/screens', screenRoutes);
+app.use('/api/v1/shows', showRoutes);
 
 // Catch 404 and forward to error handler
 app.use(notFoundHandler);
