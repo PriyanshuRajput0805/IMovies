@@ -93,6 +93,13 @@ const bookingSchema = new mongoose.Schema(
     },
     cancelledAt: {
       type: Date
+    },
+    paymentDetails: {
+      razorpayOrderId: String,
+      razorpayPaymentId: String,
+      razorpaySignature: String,
+      paymentMethod: { type: String, default: 'card' },
+      paidAt: Date
     }
   },
   {

@@ -14,6 +14,7 @@ import theatreRoutes from './routes/theatre.routes.js';
 import screenRoutes from './routes/screen.routes.js';
 import showRoutes from './routes/show.routes.js';
 import bookingRoutes from './routes/booking.routes.js';
+import paymentRoutes from './routes/payment.routes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -67,6 +68,7 @@ app.use('/api/v1/theatres', theatreRoutes);
 app.use('/api/v1/screens', screenRoutes);
 app.use('/api/v1/shows', showRoutes);
 app.use('/api/v1/bookings', bookingRoutes);
+app.use('/api/v1/payments', paymentRoutes);
 
 // Catch 404 and forward to error handler
 app.use(notFoundHandler);
