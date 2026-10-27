@@ -1,0 +1,209 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Bootstrap 5 Base Import */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Root CSS Variables - Modern Cinema Dark Theme */
+:root {
+  --imovies-bg-dark: #07090e;
+  --imovies-bg-surface: #0f141f;
+  --imovies-bg-card: #151b29;
+  --imovies-bg-card-hover: #1b2336;
+  --imovies-border: rgba(255, 255, 255, 0.08);
+  --imovies-border-glow: rgba(245, 158, 11, 0.25);
+  
+  --imovies-primary: #f59e0b;
+  --imovies-primary-hover: #d97706;
+  --imovies-accent: #e11d48;
+  --imovies-accent-glow: rgba(225, 29, 72, 0.35);
+  --imovies-cyan: #06b6d4;
+  --imovies-emerald: #10b981;
+
+  --imovies-text-main: #f8fafc;
+  --imovies-text-muted: #94a3b8;
+  --imovies-text-subtle: #64748b;
+
+  --imovies-font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --imovies-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --imovies-radius-sm: 6px;
+  --imovies-radius-md: 12px;
+  --imovies-radius-lg: 18px;
+  --imovies-radius-xl: 24px;
+
+  --imovies-shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+  --imovies-shadow-glow: 0 0 25px -5px rgba(245, 158, 11, 0.3);
+}
+
+/* Base Body Styles */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--imovies-bg-dark);
+  color: var(--imovies-text-main);
+  font-family: var(--imovies-font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6, .cinema-heading {
+  font-family: var(--imovies-font-heading);
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: var(--imovies-text-main);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--imovies-bg-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--imovies-primary);
+}
+
+/* Accessibility: Visible Focus Rings */
+:focus-visible {
+  outline: 2px solid var(--imovies-primary);
+  outline-offset: 3px;
+}
+
+/* Glassmorphic Cinema Cards */
+.cinema-card {
+  background: var(--imovies-bg-card);
+  border: 1px solid var(--imovies-border);
+  border-radius: var(--imovies-radius-md);
+  box-shadow: var(--imovies-shadow-card);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cinema-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.8), var(--imovies-shadow-glow);
+}
+
+/* Buttons */
+.btn-cinema-primary {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #07090e;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--imovies-radius-sm);
+  padding: 0.6rem 1.4rem;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-cinema-primary:hover, .btn-cinema-primary:focus {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #000;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-cinema-outline {
+  background: transparent;
+  color: var(--imovies-text-main);
+  border: 1px solid var(--imovies-border);
+  border-radius: var(--imovies-radius-sm);
+  padding: 0.55rem 1.3rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-cinema-outline:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--imovies-primary);
+  color: var(--imovies-primary);
+}
+
+/* Badges */
+.badge-gold {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  font-weight: 600;
+}
+
+.badge-red {
+  background: rgba(225, 29, 72, 0.15);
+  color: #fb7185;
+  border: 1px solid rgba(225, 29, 72, 0.3);
+  font-weight: 600;
+}
+
+.badge-emerald {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  font-weight: 600;
+}
+
+/* Hero Gradient Overlay */
+.cinema-hero-overlay {
+  background: linear-gradient(to top, var(--imovies-bg-dark) 0%, rgba(7, 9, 14, 0.8) 60%, rgba(7, 9, 14, 0.4) 100%);
+}
+
+/* Glow Pill Indicator */
+.status-pill-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+.status-pill-pulse::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  animation: pulse-ring 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.8); opacity: 0; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.status-pill-online {
+  background-color: #10b981;
+}
+.status-pill-online::after {
+  background-color: #10b981;
+}
+
+.status-pill-offline {
+  background-color: #ef4444;
+}
+.status-pill-offline::after {
+  background-color: #ef4444;
+}

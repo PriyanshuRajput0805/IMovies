@@ -1,0 +1,30 @@
+{
+  "name": "imovies-cinema-platform",
+  "version": "1.0.0",
+  "description": "IMovies - Full-Stack Cinema Management and Online Movie Ticket Booking System",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install",
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,magenta\" \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "start:backend": "npm start --prefix backend",
+    "build:frontend": "npm run build --prefix frontend",
+    "test:backend": "npm test --prefix backend",
+    "test:frontend": "npm test --prefix frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "cinema",
+    "movie-booking",
+    "mern",
+    "react",
+    "nodejs",
+    "socket.io",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "ISC"
+}
