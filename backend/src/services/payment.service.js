@@ -1,6 +1,8 @@
 import crypto from 'crypto';
+import mongoose from 'mongoose';
 import Razorpay from 'razorpay';
 import { Booking } from '../models/booking.model.js';
+import { BookedSeat } from '../models/bookedSeat.model.js';
 import { Show } from '../models/show.model.js';
 import { SeatLock } from '../models/seatLock.model.js';
 import { ApiError } from '../utils/ApiError.js';
@@ -246,10 +248,34 @@ export const verifyAndConfirmBooking = async ({
   // 3. Compute final pricing & build seat structures
   const { selectedSeatsInfo, priceBreakdown, totalAmount } = computeBookingPricing(show, seats);
 
-  // 4. Create confirmed Booking record
+  // 4. Atomically claim seats in BookedSeat. The compound unique index { showId: 1, seatIdentifier: 1 }
+  // guarantees that any concurrent double-booking attempt is rejected at database engine level.
+  const bookingId = new mongoose.Types.ObjectId();
+  const bookedSeatDocs = seats.map((seatId) => ({
+    showId,
+    seatIdentifier: seatId,
+    bookingId,
+    bookedBy: userId
+  }));
+
+  try {
+    await BookedSeat.insertMany(bookedSeatDocs, { ordered: true });
+  } catch (err) {
+    if (
+      err.code === 11000 ||
+      (err.writeErrors && err.writeErrors.some((we) => we.code === 11000)) ||
+      err.name === 'MongoServerError'
+    ) {
+      throw ApiError.conflict('Double booking prevented: One or more seats were already booked.');
+    }
+    throw err;
+  }
+
+  // 5. Create confirmed Booking record
   const bookingReference = generateBookingReference();
 
   const booking = await Booking.create({
+    _id: bookingId,
     bookingReference,
     userId,
     showId,

@@ -1,5 +1,6 @@
 import { SeatLock } from '../models/seatLock.model.js';
 import { Booking } from '../models/booking.model.js';
+import { BookedSeat } from '../models/bookedSeat.model.js';
 import { Show } from '../models/show.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import { env } from '../config/env.js';
@@ -38,6 +39,9 @@ export const getShowSeatLayoutWithAvailability = async (showId, currentUserId = 
       permanentlyBookedSeats.add(seat.seatIdentifier);
     });
   });
+
+  const bookedSeatDocs = await BookedSeat.find({ showId }).select('seatIdentifier');
+  bookedSeatDocs.forEach((bs) => permanentlyBookedSeats.add(bs.seatIdentifier));
 
   // 2. Fetch active, unexpired seat locks
   const activeLocks = await SeatLock.find({
@@ -150,45 +154,50 @@ export const lockSeats = async ({ showId, seatIdentifiers, userId }) => {
   const lockDurationMs = env.SEAT_LOCK_EXPIRY_MINUTES * 60 * 1000;
   const expiresAt = new Date(now.getTime() + lockDurationMs);
 
-  // 1. Check if any seat is already booked
-  const confirmedBookings = await Booking.find({
+  // 1. Check if any seat is already booked in BookedSeat or Booking
+  const alreadyBooked = await BookedSeat.find({
     showId,
-    bookingStatus: 'confirmed',
-    'selectedSeats.seatIdentifier': { $in: seatIdentifiers }
+    seatIdentifier: { $in: seatIdentifiers }
   });
 
-  if (confirmedBookings.length > 0) {
+  if (alreadyBooked.length > 0) {
     throw ApiError.conflict('One or more selected seats have already been booked by another customer.');
   }
 
-  // 2. Check if any seat is currently locked by another user
-  const activeLocks = await SeatLock.find({
+  // 2. Clean up expired locks
+  await SeatLock.deleteMany({
     showId,
-    seatIdentifier: { $in: seatIdentifiers },
-    expiresAt: { $gt: now }
+    expiresAt: { $lte: now }
   });
 
-  const lockedByOther = activeLocks.filter((l) => l.lockedBy.toString() !== userId.toString());
-  if (lockedByOther.length > 0) {
-    const conflictingSeats = lockedByOther.map((l) => l.seatIdentifier).join(', ');
-    throw ApiError.conflict(`Seat(s) ${conflictingSeats} are temporarily reserved by another customer.`);
-  }
+  // 3. Remove any locks previously held by this same user for these seats
+  await SeatLock.deleteMany({
+    showId,
+    lockedBy: userId,
+    seatIdentifier: { $in: seatIdentifiers }
+  });
 
-  // 3. Atomically upsert locks for the requesting user
-  const createdLocks = [];
-  for (const seatId of seatIdentifiers) {
-    const lock = await SeatLock.findOneAndUpdate(
-      { showId, seatIdentifier: seatId },
-      {
-        showId,
-        seatIdentifier: seatId,
-        lockedBy: userId,
-        lockedAt: now,
-        expiresAt
-      },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    );
-    createdLocks.push(lock);
+  // 4. Atomically insert locks. Compound unique index { showId: 1, seatIdentifier: 1 }
+  // guarantees that parallel race conditions fail with 11000 duplicate key error.
+  const lockDocs = seatIdentifiers.map((seatId) => ({
+    showId,
+    seatIdentifier: seatId,
+    lockedBy: userId,
+    lockedAt: now,
+    expiresAt
+  }));
+
+  try {
+    await SeatLock.insertMany(lockDocs, { ordered: true });
+  } catch (err) {
+    if (
+      err.code === 11000 ||
+      (err.writeErrors && err.writeErrors.some((we) => we.code === 11000)) ||
+      err.name === 'MongoServerError'
+    ) {
+      throw ApiError.conflict('One or more selected seats are temporarily reserved by another customer.');
+    }
+    throw err;
   }
 
   // 4. Real-time broadcast to all viewers in this show room via Socket.IO

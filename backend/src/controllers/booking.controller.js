@@ -1,4 +1,5 @@
 import { Booking } from '../models/booking.model.js';
+import { BookedSeat } from '../models/bookedSeat.model.js';
 import { Show } from '../models/show.model.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { ApiError } from '../utils/ApiError.js';
@@ -160,6 +161,9 @@ export const cancelBooking = async (req, res, next) => {
     booking.bookingStatus = 'cancelled';
     booking.cancelledAt = new Date();
     await booking.save();
+
+    // Release confirmed seat locks so seats become available again
+    await BookedSeat.deleteMany({ bookingId: booking._id });
 
     logger.info(`Booking cancelled: ${booking.bookingReference}`);
 
